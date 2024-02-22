@@ -48,7 +48,7 @@
 <div class="container">
     <h3>Hello from Home Page, Please Login</h3>
     <br>
-    <div class="link-container"><a href="login">Login</a></div>
+    <div class="link-container"><a href="login.jsp">Login</a></div>
 </div>
 </body>
 </html>

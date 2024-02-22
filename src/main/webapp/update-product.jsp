@@ -1,6 +1,3 @@
-<%@ page import="com.example.productcatalogmanagement.repo.ProductRepository" %>
-<%@ page import="com.example.productcatalogmanagement.entity.Product" %>
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>

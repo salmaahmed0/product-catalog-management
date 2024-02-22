@@ -17,13 +17,13 @@ public class authentication extends HttpFilter {
 
         HttpSession session = request.getSession();
         String user = (String) session.getAttribute("user-auth");
+
         if (user == null && (request.getRequestURI().endsWith("/products") ||
                 request.getRequestURI().endsWith("/update") ||
                 request.getRequestURI().endsWith("/add-product") ||
                 request.getRequestURI().endsWith("/delete"))
            ) {
-
-            request.getRequestDispatcher("login").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
         }else {
             chain.doFilter(request, response);
         }
