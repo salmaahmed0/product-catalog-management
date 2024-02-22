@@ -1,64 +1,92 @@
 package com.example.productcatalogmanagement.repo;
 
-import com.example.productcatalogmanagement.entity.Product;
+import com.example.productcatalogmanagement.entity.Products;
 
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.transaction.Transactional;
 import java.util.List;
 
+
+@Transactional
 public class ProductRepository {
 
-    private int sequence = 1;
-    private static ProductRepository instance ;
-    List<Product> products = new ArrayList<>();
+    private EntityManagerFactory entityManagerFactory;
+    private EntityManager entityManager ;
+    private volatile static ProductRepository instance;
 
-    private ProductRepository() {
-        products.add(new Product(sequence++, "Product A", 100));
-        products.add(new Product(sequence++, "Product B", 150));
-        products.add(new Product(sequence++, "Product C", 170));
-        products.add(new Product(sequence++, "Product D", 80));
-        products.add(new Product(sequence++, "Product E", 120));
-        products.add(new Product(sequence++, "Product F", 50));
-        products.add(new Product(sequence++, "Product G", 150));
+    private ProductRepository(){
+        entityManagerFactory = Persistence.createEntityManagerFactory("PersistenceUnit");
+        entityManager = entityManagerFactory.createEntityManager();
     }
     public static ProductRepository getInstance(){
-        if(instance == null) {
+        if (instance == null){
             synchronized (ProductRepository.class){
                 if (instance == null) {
-                    instance = new ProductRepository();
+                    return new ProductRepository();
                 }
             }
         }
         return instance;
     }
-
-    public List<Product> findProducts() {
-        return products;
+    public List<Products> findProducts(){
+        return entityManager.createQuery("SELECT s FROM Products s", Products.class).getResultList();
     }
 
-    public Product findProduct(int id){
-        for (Product i : products){
-            if (i.getId() == id)
-                return i;
+    public Products findProductById(int id){
+        return entityManager.find(Products.class, id);
+    }
+
+    public  boolean addProduct(Products product){
+        try {
+            beginTransaction();
+            entityManager.persist(product);
+            commitTransaction();
+            return true;
+        }catch (Exception ex){
+            System.out.println("Database Error : " + ex.getMessage());
+            rollBackTransaction();
+            return false;
         }
-        return null;
     }
 
-
-    public void addProduct(Product product) {
-        product.setId(sequence++);
-        products.add(product);
-    }
-    public boolean updateProduct(Product product){
-        for(Product i : products){
-            if (i.getId() == product.getId()){
-                i.setName(product.getName());
-                i.setPrice(product.getPrice());
-                return true;
-            }
+    public boolean updateProduct(Products product){
+        try{
+            beginTransaction();
+            entityManager.merge(product);
+            commitTransaction();
+            return true;
+        }catch (Exception ex){
+            System.out.println("Database Error : " + ex.getMessage());
+            rollBackTransaction();
+            return false;
         }
-        return false;
     }
-    public boolean deleteProduct(int id) {
-        return products.removeIf(p -> p.getId() == id);
+
+    public boolean delete(int id){
+        try {
+            beginTransaction();
+            Products product = entityManager.find(Products.class, id);
+            entityManager.remove(product);
+            commitTransaction();
+            return true;
+        }catch (Exception ex){
+            System.out.println("Database Error : " + ex.getMessage());
+            rollBackTransaction();
+            return false;
+        }
+    }
+
+    private void beginTransaction(){
+        entityManager.getTransaction().begin();
+    }
+
+    private void commitTransaction(){
+        entityManager.getTransaction().commit();
+    }
+
+    private void rollBackTransaction(){
+        entityManager.getTransaction().rollback();
     }
 }

@@ -1,6 +1,6 @@
 package com.example.productcatalogmanagement.servlet;
 
-import com.example.productcatalogmanagement.entity.Product;
+import com.example.productcatalogmanagement.entity.Products;
 import com.example.productcatalogmanagement.repo.ProductRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,8 +17,8 @@ public class UpdateProductServlet extends HttpServlet {
 
         int id = Integer.parseInt(request.getParameter("id"));
 
-        ProductRepository productRepository = ProductRepository.getInstance();
-        Product product= productRepository.findProduct(id);
+        ProductRepository productRepository = (ProductRepository) getServletContext().getAttribute("productRepo");
+        Products product = productRepository.findProductById(id);
 
         request.setAttribute("id", id);
         request.setAttribute("name", product.getName());

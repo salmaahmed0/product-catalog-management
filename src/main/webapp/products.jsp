@@ -1,11 +1,10 @@
-<%@ page import="com.example.productcatalogmanagement.repo.ProductRepository" %>
-<%@ page import="com.example.productcatalogmanagement.entity.Product" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.example.productcatalogmanagement.entity.Products" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<Product> products = (List<Product>) request.getAttribute("products-list");
+    List<Products> products = (List<Products>) request.getAttribute("products-list");
 
 %>
 
@@ -28,7 +27,7 @@
 
         <%
             if(products!=null)
-            for (Product item : products){
+            for (Products item : products){
         %>
         <div class="col-md-3 my-3">
             <div class="card" style="width: 18rem;">

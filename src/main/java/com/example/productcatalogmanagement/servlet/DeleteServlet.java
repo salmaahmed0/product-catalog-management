@@ -16,8 +16,8 @@ public class DeleteServlet extends HttpServlet {
 
         int id = Integer.parseInt(request.getParameter("id"));
 
-        ProductRepository productRepository = ProductRepository.getInstance();
-        productRepository.deleteProduct(id);
+        ProductRepository productRepository = (ProductRepository) getServletContext().getAttribute("productRepo");
+        productRepository.delete(id);
 
         System.out.println("item deleted.");
         response.sendRedirect("products");

@@ -1,6 +1,6 @@
 package com.example.productcatalogmanagement.servlet;
 
-import com.example.productcatalogmanagement.entity.Product;
+import com.example.productcatalogmanagement.entity.Products;
 import com.example.productcatalogmanagement.repo.ProductRepository;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,12 +21,12 @@ public class UpdateToNewValues extends HttpServlet {
         String itemName = request.getParameter("item-name");
         double itemPrice = Double.parseDouble(request.getParameter("item-price"));
 
-        ProductRepository productRepository = ProductRepository.getInstance();
+        ProductRepository productRepository = (ProductRepository) getServletContext().getAttribute("productRepo");
 
-        Product item = new Product(itemID, itemName, itemPrice);
-        productRepository.updateProduct(item);
+        Products item = new Products(itemID, itemName, itemPrice);
+        boolean updated = productRepository.updateProduct(item);
 
-        System.out.println("Item Updated.");
+        if(updated) System.out.println("Item Updated.");
         response.sendRedirect("products");
 
     }

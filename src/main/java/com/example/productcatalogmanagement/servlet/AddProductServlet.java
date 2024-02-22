@@ -1,6 +1,6 @@
 package com.example.productcatalogmanagement.servlet;
 
-import com.example.productcatalogmanagement.entity.Product;
+import com.example.productcatalogmanagement.entity.Products;
 import com.example.productcatalogmanagement.repo.ProductRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,12 +17,12 @@ public class AddProductServlet extends HttpServlet {
 
         request.getRequestDispatcher("/add-product.jsp").include(request, response);
 
-        ProductRepository productRepository = ProductRepository.getInstance();
+        ProductRepository productRepository = (ProductRepository) getServletContext().getAttribute("productRepo");
 
         String itemName = request.getParameter("item-name");
         double itemPrice = Double.parseDouble(request.getParameter("item-price"));
 
-        Product item = new Product(itemName, itemPrice);
+        Products item = new Products(itemName, itemPrice);
         productRepository.addProduct(item);
         System.out.println("New item added.");
         response.sendRedirect("products");
